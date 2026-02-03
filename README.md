@@ -60,3 +60,12 @@ Start command:
 ```bash
 uvicorn app.main:app --host 0.0.0.0 --port $PORT
 ```
+
+## Schema upgrades
+
+For existing databases, use the upgrade script:
+
+```bash
+export DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DB?sslmode=require&channel_binding=require"
+./scripts/upgrade_schema.sh
+```
