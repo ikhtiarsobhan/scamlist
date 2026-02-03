@@ -36,6 +36,7 @@
               <p class="subject">Subject: {{ r.subject }}</p>
             {% endif %}
             <p class="message">{{ r.message_content }}</p>
+            <p class="muted">Classification: {{ r.classification }}</p>
             {% set attachments = attachments_map.get(r.id, []) %}
             {% if attachments %}
               <div class="attachments">

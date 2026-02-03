@@ -17,6 +17,11 @@ class Report(Base):
     reporter_name = Column(Text)
     reporter_contact = Column(Text)
 
+    suggested_classification = Column(Text, nullable=False, server_default="unclassified")
+    classification = Column(Text, nullable=False, server_default="unclassified")
+    classified_by = Column(Text)
+    classified_on = Column(DateTime(timezone=True))
+
     is_flagged = Column(Boolean, server_default="false", nullable=False)
     flag_reason = Column(Text)
     flagged_on = Column(DateTime(timezone=True))

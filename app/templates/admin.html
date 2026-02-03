@@ -60,6 +60,8 @@
             {% if r.deleted %}
               <p class="flagged">Deleted</p>
             {% endif %}
+            <p class="muted">Suggested: {{ r.suggested_classification }}</p>
+            <p class="muted">Current: {{ r.classification }}</p>
 
             <form method="post" action="/admin/action" class="admin-actions">
               <input type="hidden" name="report_id" value="{{ r.id }}" />
@@ -67,12 +69,21 @@
                 Reason
                 <input type="text" name="reason" placeholder="Optional reason" />
               </label>
+              <label>
+                Classification
+                <select name="classification">
+                  <option value="unclassified" {% if r.classification == "unclassified" %}selected{% endif %}>Unclassified</option>
+                  <option value="spam" {% if r.classification == "spam" %}selected{% endif %}>Spam</option>
+                  <option value="scam" {% if r.classification == "scam" %}selected{% endif %}>Scam</option>
+                </select>
+              </label>
               <div class="admin-buttons">
                 {% if r.is_flagged %}
                   <button type="submit" name="action" value="unflag">Unflag</button>
                 {% else %}
                   <button type="submit" name="action" value="flag">Flag</button>
                 {% endif %}
+                <button type="submit" name="action" value="classify">Save Classification</button>
                 <button type="submit" name="action" value="delete" class="danger">Delete</button>
               </div>
             </form>

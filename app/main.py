@@ -99,6 +99,7 @@ def submit_report(
     received_at: str = Form(""),
     reporter_name: str = Form(""),
     reporter_contact: str = Form(""),
+    suggested_classification: str = Form("unclassified"),
     attachment: UploadFile | None = File(None),
 ):
     with get_db() as db:
@@ -117,6 +118,8 @@ def submit_report(
             received_at=parsed_received_at,
             reporter_name=reporter_name or None,
             reporter_contact=reporter_contact or None,
+            suggested_classification=suggested_classification,
+            classification=suggested_classification,
         )
 
         db.add(report)
@@ -227,6 +230,7 @@ def admin_action(
     report_id: int = Form(...),
     action: str = Form(...),
     reason: str = Form(""),
+    classification: str = Form("unclassified"),
     admin_user: str = Depends(require_admin),
 ):
     with get_db() as db:
@@ -245,6 +249,10 @@ def admin_action(
             report.flag_reason = None
             report.flagged_on = None
             report.flagged_by = None
+        elif action == "classify":
+            report.classification = classification
+            report.classified_by = admin_user
+            report.classified_on = now
         elif action == "delete":
             report.deleted = True
             report.deleted_on = now
