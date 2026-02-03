@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <section class="card">
+    <h2>Admin Moderation</h2>
+    <p class="muted">Signed in as {{ admin_user }}. Flagged reports are hidden from public search.</p>
+    <div class="admin-stats">
+      <div>
+        <span class="stat-label">Total</span>
+        <span class="stat-value">{{ total_all }}</span>
+      </div>
+      <div>
+        <span class="stat-label">Flagged</span>
+        <span class="stat-value">{{ total_flagged }}</span>
+      </div>
+      <div>
+        <span class="stat-label">Deleted</span>
+        <span class="stat-value">{{ total_deleted }}</span>
+      </div>
+    </div>
+    <form method="get" action="/admin" class="admin-filters">
+      <label>
+        Status
+        <select name="status">
+          <option value="all" {% if status == "all" %}selected{% endif %}>All</option>
+          <option value="flagged" {% if status == "flagged" %}selected{% endif %}>Flagged only</option>
+          <option value="unflagged" {% if status == "unflagged" %}selected{% endif %}>Unflagged only</option>
+        </select>
+      </label>
+      <label>
+        Search
+        <input type="text" name="q" value="{{ q }}" placeholder="phone, email, phrase" />
+      </label>
+      <label class="checkbox">
+        <input type="checkbox" name="show_deleted" value="1" {% if show_deleted %}checked{% endif %} />
+        Show deleted
+      </label>
+      <button type="submit">Apply</button>
+    </form>
+  </section>
+
+  <section class="results">
+    <h3>Reports ({{ total }})</h3>
+    {% if reports %}
+      <div class="report-list">
+        {% for r in reports %}
+          <article class="report-card">
+            <header>
+              <span class="pill">{{ r.report_type | upper }}</span>
+              <span class="muted">Submitted {{ r.created_on.strftime('%Y-%m-%d %H:%M') }}</span>
+            </header>
+            <h4>{{ r.source_from or "Unknown source" }}</h4>
+            {% if r.subject %}
+              <p class="subject">Subject: {{ r.subject }}</p>
+            {% endif %}
+            <p class="message">{{ r.message_content }}</p>
+            {% if r.is_flagged %}
+              <p class="flagged">Flagged: {{ r.flag_reason or "flagged" }}</p>
+            {% endif %}
+            {% if r.deleted %}
+              <p class="flagged">Deleted</p>
+            {% endif %}
+
+            <form method="post" action="/admin/action" class="admin-actions">
+              <input type="hidden" name="report_id" value="{{ r.id }}" />
+              <label>
+                Reason
+                <input type="text" name="reason" placeholder="Optional reason" />
+              </label>
+              <div class="admin-buttons">
+                {% if r.is_flagged %}
+                  <button type="submit" name="action" value="unflag">Unflag</button>
+                {% else %}
+                  <button type="submit" name="action" value="flag">Flag</button>
+                {% endif %}
+                <button type="submit" name="action" value="delete" class="danger">Delete</button>
+              </div>
+            </form>
+          </article>
+        {% endfor %}
+      </div>
+      <div class="pagination">
+        {% if page > 1 %}
+          <a href="/admin?status={{ status }}&show_deleted={{ show_deleted }}&q={{ q }}&page={{ page - 1 }}">Previous</a>
+        {% endif %}
+        <span class="muted">Page {{ page }} of {{ total_pages }}</span>
+        {% if page < total_pages %}
+          <a href="/admin?status={{ status }}&show_deleted={{ show_deleted }}&q={{ q }}&page={{ page + 1 }}">Next</a>
+        {% endif %}
+      </div>
+    {% else %}
+      <p class="muted">No reports found.</p>
+    {% endif %}
+  </section>
+{% endblock %}

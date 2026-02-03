@@ -1,0 +1,78 @@
+-- create_schema.psql
+-- Minimal schema for Scam Report Hub
+-- Requires Postgres and pg_trgm extension
+
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
+CREATE TABLE IF NOT EXISTS public.reports (
+  id bigserial PRIMARY KEY,
+  report_type text NOT NULL CHECK (report_type IN ('sms', 'email', 'call')),
+  source_from text,
+  subject text,
+  message_content text NOT NULL,
+  received_at timestamptz,
+  reporter_name text,
+  reporter_contact text,
+  is_flagged boolean NOT NULL DEFAULT false,
+  flag_reason text,
+  flagged_on timestamptz,
+  flagged_by text,
+  created_on timestamptz NOT NULL DEFAULT now(),
+  updated_on timestamptz NOT NULL DEFAULT now(),
+  deleted boolean NOT NULL DEFAULT false,
+  deleted_on timestamptz
+);
+
+CREATE TABLE IF NOT EXISTS public.attachments (
+  id bigserial PRIMARY KEY,
+  report_id bigint NOT NULL REFERENCES public.reports(id) ON DELETE CASCADE,
+  original_name text NOT NULL,
+  storage_path text NOT NULL,
+  mime_type text,
+  size_bytes bigint,
+  created_on timestamptz NOT NULL DEFAULT now(),
+  deleted boolean NOT NULL DEFAULT false,
+  deleted_on timestamptz
+);
+
+CREATE OR REPLACE FUNCTION public.trg_set_updated_on()
+RETURNS trigger LANGUAGE plpgsql AS $$
+BEGIN
+  NEW.updated_on = now();
+  RETURN NEW;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION public.trg_manage_deleted_on()
+RETURNS trigger LANGUAGE plpgsql AS $$
+BEGIN
+  IF NEW.deleted IS TRUE AND (OLD.deleted IS NULL OR OLD.deleted IS FALSE) THEN
+    NEW.deleted_on = now();
+  ELSIF NEW.deleted IS FALSE THEN
+    NEW.deleted_on = NULL;
+  END IF;
+  RETURN NEW;
+END;
+$$;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'reports_set_updated_on') THEN
+    CREATE TRIGGER reports_set_updated_on BEFORE UPDATE ON public.reports
+    FOR EACH ROW EXECUTE FUNCTION public.trg_set_updated_on();
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'reports_manage_deleted_on') THEN
+    CREATE TRIGGER reports_manage_deleted_on BEFORE UPDATE ON public.reports
+    FOR EACH ROW EXECUTE FUNCTION public.trg_manage_deleted_on();
+  END IF;
+END;
+$$;
+
+CREATE INDEX IF NOT EXISTS attachments_report_id_idx ON public.attachments(report_id);
+
+CREATE INDEX IF NOT EXISTS reports_type_idx ON public.reports(report_type);
+CREATE INDEX IF NOT EXISTS reports_flagged_idx ON public.reports(is_flagged);
+CREATE INDEX IF NOT EXISTS reports_received_at_idx ON public.reports(received_at);
+CREATE INDEX IF NOT EXISTS reports_message_trgm ON public.reports USING GIN (message_content gin_trgm_ops);
+CREATE INDEX IF NOT EXISTS reports_source_trgm ON public.reports USING GIN (source_from gin_trgm_ops);
+CREATE INDEX IF NOT EXISTS reports_subject_trgm ON public.reports USING GIN (subject gin_trgm_ops);

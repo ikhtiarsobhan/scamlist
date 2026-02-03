@@ -1,0 +1,269 @@
+:root {
+  --bg: #f4f1ea;
+  --ink: #1b1b1b;
+  --muted: #5b5b5b;
+  --accent: #0f766e;
+  --accent-dark: #0b4d47;
+  --card: #ffffff;
+  --border: #e1d9cc;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  background: radial-gradient(circle at top left, #fff8e7 0%, var(--bg) 55%, #efe7d6 100%);
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+.container {
+  width: min(1000px, 92vw);
+  margin: 0 auto;
+}
+
+.site-header {
+  background: linear-gradient(90deg, #113f3a, #0f766e);
+  color: #fff;
+  padding: 20px 0;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+}
+
+.site-header h1 {
+  margin: 0 0 6px 0;
+  font-size: 1.8rem;
+}
+
+.site-header nav a {
+  color: #e8fff6;
+  text-decoration: none;
+  margin-right: 16px;
+  font-weight: 600;
+}
+
+.site-header nav a:hover {
+  text-decoration: underline;
+}
+
+.site-footer {
+  margin-top: 40px;
+  padding: 20px 0;
+  color: var(--muted);
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  margin-top: 24px;
+}
+
+.search-form,
+.submit-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  align-items: end;
+}
+
+.search-form label,
+.submit-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 600;
+}
+
+input,
+select,
+textarea {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  font-size: 1rem;
+}
+
+button {
+  padding: 12px 18px;
+  border-radius: 999px;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.1s ease, background 0.2s ease;
+}
+
+button:hover {
+  background: var(--accent-dark);
+  transform: translateY(-1px);
+}
+
+.results {
+  margin-top: 28px;
+}
+
+.report-list {
+  display: grid;
+  gap: 16px;
+}
+
+.report-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-left: 6px solid var(--accent);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.report-card header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.pill {
+  background: #e6f6f4;
+  color: var(--accent-dark);
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.subject {
+  font-weight: 600;
+}
+
+.message {
+  white-space: pre-wrap;
+}
+
+.flagged {
+  color: #7a2d2d;
+  font-weight: 700;
+}
+
+.admin-actions {
+  margin-top: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.admin-stats {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.admin-stats div {
+  background: #f7f2e7;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.stat-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.admin-filters {
+  margin-top: 12px;
+  display: flex;
+  gap: 12px;
+  align-items: end;
+  flex-wrap: wrap;
+}
+
+.admin-filters label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.admin-filters .checkbox {
+  flex-direction: row;
+  align-items: center;
+  font-weight: 600;
+  gap: 8px;
+}
+
+.admin-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.danger {
+  background: #8b1f1f;
+}
+
+.danger:hover {
+  background: #5f1414;
+}
+
+.pagination {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.pagination a {
+  text-decoration: none;
+  font-weight: 700;
+  color: var(--accent-dark);
+}
+
+.pagination a:hover {
+  text-decoration: underline;
+}
+
+.attachments {
+  margin-top: 10px;
+}
+
+.attachments ul {
+  margin: 6px 0 0 18px;
+}
+
+.attachments a {
+  color: var(--accent-dark);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.attachments a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .site-header h1 {
+    font-size: 1.4rem;
+  }
+
+  .search-form,
+  .submit-form {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <section class="card">
+    <h2>Submit a Scam Report</h2>
+    <form method="post" action="/submit" class="submit-form" enctype="multipart/form-data">
+      <label>
+        Type
+        <select name="report_type" required>
+          <option value="sms">SMS</option>
+          <option value="email">Email</option>
+          <option value="call">Call</option>
+        </select>
+      </label>
+
+      <label>
+        Source (phone or email)
+        <input type="text" name="source_from" placeholder="+1 555 123 4567 or scam@example.com" />
+      </label>
+
+      <label>
+        Subject (email only)
+        <input type="text" name="subject" placeholder="Optional subject" />
+      </label>
+
+      <label>
+        Message or details
+        <textarea name="message_content" rows="6" required placeholder="Paste the message or describe the call"></textarea>
+      </label>
+
+      <label>
+        Attachment (optional)
+        <input type="file" name="attachment" />
+      </label>
+
+      <label>
+        When did it happen?
+        <input type="datetime-local" name="received_at" />
+      </label>
+
+      <label>
+        Your name (optional)
+        <input type="text" name="reporter_name" />
+      </label>
+
+      <label>
+        Your contact (optional)
+        <input type="text" name="reporter_contact" placeholder="email or phone" />
+      </label>
+
+      <button type="submit">Submit Report</button>
+    </form>
+  </section>
+{% endblock %}

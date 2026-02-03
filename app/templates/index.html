@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <section class="card">
+    <h2>Search Reports</h2>
+    <form method="get" action="/" class="search-form">
+      <label>
+        Keyword
+        <input type="text" name="q" value="{{ q }}" placeholder="phone, email, phrase, URL" />
+      </label>
+      <label>
+        Type
+        <select name="report_type">
+          <option value="all" {% if report_type == "all" %}selected{% endif %}>All</option>
+          <option value="sms" {% if report_type == "sms" %}selected{% endif %}>SMS</option>
+          <option value="email" {% if report_type == "email" %}selected{% endif %}>Email</option>
+          <option value="call" {% if report_type == "call" %}selected{% endif %}>Call</option>
+        </select>
+      </label>
+      <button type="submit">Search</button>
+    </form>
+  </section>
+
+  <section class="results">
+    <h3>Results ({{ reports | length }})</h3>
+    {% if reports %}
+      <div class="report-list">
+        {% for r in reports %}
+          <article class="report-card">
+            <header>
+              <span class="pill">{{ r.report_type | upper }}</span>
+              <span class="muted">Submitted {{ r.created_on.strftime('%Y-%m-%d %H:%M') }}</span>
+            </header>
+            <h4>{{ r.source_from or "Unknown source" }}</h4>
+            {% if r.subject %}
+              <p class="subject">Subject: {{ r.subject }}</p>
+            {% endif %}
+            <p class="message">{{ r.message_content }}</p>
+            {% set attachments = attachments_map.get(r.id, []) %}
+            {% if attachments %}
+              <div class="attachments">
+                <p class="muted">Attachments:</p>
+                <ul>
+                  {% for a in attachments %}
+                    <li><a href="/attachments/{{ a.id }}">{{ a.original_name }}</a></li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endif %}
+            {% if r.received_at %}
+              <p class="muted">Received: {{ r.received_at.strftime('%Y-%m-%d %H:%M') }}</p>
+            {% endif %}
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="muted">No reports yet. Be the first to submit one.</p>
+    {% endif %}
+  </section>
+{% endblock %}
