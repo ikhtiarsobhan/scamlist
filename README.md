@@ -35,3 +35,28 @@ ADMIN_PASSWORD=change_me
 ```
 
 Visit `/admin` and authenticate with HTTP Basic to flag or delete reports.
+
+## Deployment (Neon + Render)
+
+1. **Neon**: Create a Postgres database and copy the connection string.
+2. **Set Render env vars**:
+   - `DATABASE_URL` (use the Neon URL, with `sslmode=require`)
+   - `ADMIN_USER`
+   - `ADMIN_PASSWORD`
+3. **Apply schema to Neon**:
+
+```bash
+psql "postgresql://USER:PASSWORD@HOST:PORT/DB?sslmode=require&channel_binding=require" -f create_schema.psql
+```
+
+4. **Render build/start**:
+
+Build command:
+```bash
+pip install -r requirements.txt
+```
+
+Start command:
+```bash
+uvicorn app.main:app --host 0.0.0.0 --port $PORT
+```

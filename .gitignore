@@ -1,5 +1,18 @@
-.env
+# Byte-compiled / cache
 __pycache__/
-*.pyc
+*.py[cod]
+
+# Virtual environments
+venv/
+env/
+.env/
+
+
+# Logs
+*.log
+
+# OS files
 .DS_Store
-uploads/
+
+# Uploads (if you don’t want them tracked)
+Uploads/
