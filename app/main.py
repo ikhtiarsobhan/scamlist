@@ -110,6 +110,7 @@ def submit_report(
             except ValueError:
                 parsed_received_at = None
 
+        has_contact = bool(reporter_contact.strip())
         report = Report(
             report_type=report_type,
             source_from=source_from or None,
@@ -120,6 +121,7 @@ def submit_report(
             reporter_contact=reporter_contact or None,
             suggested_classification=suggested_classification,
             classification=suggested_classification,
+            is_verified=has_contact,
         )
 
         db.add(report)
@@ -253,6 +255,14 @@ def admin_action(
             report.classification = classification
             report.classified_by = admin_user
             report.classified_on = now
+        elif action == "verify":
+            report.is_verified = True
+            report.verified_by = admin_user
+            report.verified_on = now
+        elif action == "unverify":
+            report.is_verified = False
+            report.verified_by = None
+            report.verified_on = None
         elif action == "delete":
             report.deleted = True
             report.deleted_on = now

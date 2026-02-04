@@ -22,6 +22,10 @@ class Report(Base):
     classified_by = Column(Text)
     classified_on = Column(DateTime(timezone=True))
 
+    is_verified = Column(Boolean, server_default="false", nullable=False)
+    verified_by = Column(Text)
+    verified_on = Column(DateTime(timezone=True))
+
     is_flagged = Column(Boolean, server_default="false", nullable=False)
     flag_reason = Column(Text)
     flagged_on = Column(DateTime(timezone=True))

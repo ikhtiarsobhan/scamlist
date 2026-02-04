@@ -37,6 +37,9 @@
             {% endif %}
             <p class="message">{{ r.message_content }}</p>
             <p class="muted">Classification: {{ r.classification }}</p>
+            {% if not r.is_verified %}
+              <p class="unverified">Unverified (no reporter contact)</p>
+            {% endif %}
             {% set attachments = attachments_map.get(r.id, []) %}
             {% if attachments %}
               <div class="attachments">

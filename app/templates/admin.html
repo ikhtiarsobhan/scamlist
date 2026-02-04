@@ -60,6 +60,9 @@
             {% if r.deleted %}
               <p class="flagged">Deleted</p>
             {% endif %}
+            {% if not r.is_verified %}
+              <p class="unverified">Unverified (no reporter contact)</p>
+            {% endif %}
             <p class="muted">Suggested: {{ r.suggested_classification }}</p>
             <p class="muted">Current: {{ r.classification }}</p>
 
@@ -82,6 +85,11 @@
                   <button type="submit" name="action" value="unflag">Unflag</button>
                 {% else %}
                   <button type="submit" name="action" value="flag">Flag</button>
+                {% endif %}
+                {% if r.is_verified %}
+                  <button type="submit" name="action" value="unverify">Mark Unverified</button>
+                {% else %}
+                  <button type="submit" name="action" value="verify">Mark Verified</button>
                 {% endif %}
                 <button type="submit" name="action" value="classify">Save Classification</button>
                 <button type="submit" name="action" value="delete" class="danger">Delete</button>

@@ -155,6 +155,11 @@ button:hover {
   font-weight: 700;
 }
 
+.unverified {
+  color: #7a5a2d;
+  font-weight: 700;
+}
+
 .admin-actions {
   margin-top: 12px;
   display: grid;
